@@ -1,22 +1,276 @@
 <!DOCTYPE html><html lang="ja">
 <head>
 	<meta charset="utf-8" />
-	<title>n138-kz.github.io</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Cache-Control" content="no-cache">
-	<meta http-equiv="Expires" content="0">
-	<meta http-equiv="refresh" content="1;https://n138-kz.github.io/">
-	<link rel="preconnect dns-prefetch" href="//github.com">
-	<link rel="preconnect dns-prefetch" href="//n138-kz.github.io">
-	<link rel="preconnect dns-prefetch" href="//code.jquery.com">
-	<link rel="preconnect dns-prefetch" href="//accounts.google.com">
-	<link rel="preconnect dns-prefetch" href="//www.google.com">
-	<link rel="stylesheet" type="text/css" href="https://n138-kz.github.io/lib/master.css?t=0" />
-	<script src="https://n138-kz.github.io/lib/master.js"></script>
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-	<script src="https://accounts.google.com/gsi/client" async defer></script>
-	<script src="https://www.google.com/recaptcha/api.js?render=6LfCHdcUAAAAAOwkHsW_7W7MfoOrvoIw9CXdLRBA"></script>
-	<script src="https://n138-kz.github.io/lib/grecaptcha.js"></script>
-</head></html>
+	<style>
+		:root {
+		}
+		code {
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+		h1,h2,ul,ol,li {
+			margin: 0;
+			padding: 0;
+			margin-block-start: 0em;
+			margin-block-end: 0em;
+		}
+		ul,ol {
+			margin-left:20px;
+			padding-left:20px;
+		}
+		input:invalid {
+			background-color: pink;
+		}
+		textarea {
+			width: stretch;
+			border: none;
+		}
+	</style>
+	<script>
+		function preference_line(e0=null,mode="add") {
+			console.log(e0.parentNode.parentNode);
+			console.log(mode, {add:mode=="add", del:mode=="del"})
+			if(false){
+			}else if(mode=="add"){
+				console.log(mode);
+				e0.parentNode.parentNode.after(e0.parentNode.parentNode.cloneNode(true));
+			}else if(mode=="del"){
+				console.log(mode);
+				e0.parentNode.parentNode.remove();
+			}
+		}
+		function preference_gen() {
+			try{
+				insertTo = document.querySelector('tr.preference').parentNode.parentNode.parentNode.parentNode;
+				console.log(insertTo);
+			} catch (e) {
+				console.error(e);
+				window.alert(`Elements: 0\nmessage: ${e}`);
+				location.reload();
+				return false;
+			}
+
+			try{
+				preferences = document.querySelectorAll('tr.preference');
+				console.log(preferences);
+			} catch (e) {
+				console.error(e);
+				window.alert(`Elements: 0\nmessage: ${e}`);
+				location.reload();
+				return false;
+			}
+
+			preferences = Array.from(preferences);
+			console.log(preferences);
+			
+			let result = '';
+			let result_array = [];
+			preferences.map((e1)=>{
+				let result_line = {};
+				console.log(e1.children[1], e1.children[1].children[0].dataset.vrfId);
+				result_line[e1.children[1].children[0].dataset.vrfId] = e1.children[1].children[0].value;
+				console.log(e1.children[2], e1.children[2].children[0].dataset.vrfId);
+				result_line[e1.children[2].children[0].dataset.vrfId] = e1.children[2].children[0].value;
+				console.log(e1.children[3], e1.children[3].children[0].dataset.vrfId);
+				result_line[e1.children[3].children[0].dataset.vrfId] = e1.children[3].children[0].value;
+				console.log(e1.children[4], e1.children[4].children[0].dataset.vrfId);
+				result_line[e1.children[4].children[0].dataset.vrfId] = e1.children[4].children[0].value;
+				console.log(e1.children[5], e1.children[5].children[0].dataset.vrfId);
+				result_line[e1.children[5].children[0].dataset.vrfId] = e1.children[5].children[0].value;
+				
+				result_line['addr'] = `${result_line['addr']}/32`.split('/');
+				result_line['addr'] = `${result_line['addr'][0]}/${result_line['addr'][1]}`;
+				
+				console.log(result_line);
+				result_array.push(result_line);
+			});
+			console.log(result_array);
+			
+			for(let i=0;i<result_array.length;i++) {
+				line_vrf = '';
+				line_vrf += `ip vrf ${result_array[i]['name']}\n`;
+				line_vrf += ` rd 64512:${result_array[i]['number']}\n`;
+				line_vrf += '!\n';
+				result += line_vrf;
+			}
+			if(document.querySelector('#preference_flag_insertnull0').checked) {
+				result += `ip route 0.0.0.0 0.0.0.0 Null0\n`;
+			}
+			for(let i=0;i<result_array.length;i++) {
+				line_vrf = '';
+				line_vrf += `ip route vrf ${result_array[i]['name']} 0.0.0.0 0.0.0.0 ${result_array[i]['gateway']}\n`;
+				result += line_vrf;
+			}
+			result += '!\n';
+			for(let i=0;i<result_array.length;i++) {
+				if(result_array[i]['interface']!='') {
+					line_addr = result_array[i]['addr'].split('/')[0];
+					line_mask = result_array[i]['addr'].split('/')[1];
+					line_mask = line_mask > 32 ? 32 : line_mask;
+					line_mask = ('1'.repeat(line_mask))+('0'.repeat(32-line_mask));
+					line_mask = [
+						parseInt(line_mask.substring(0,8),2),
+						parseInt(line_mask.substring(8,16),2),
+						parseInt(line_mask.substring(16,24),2),
+						parseInt(line_mask.substring(24,32),2),
+					];
+					line_vrf = '';
+					line_vrf += `interface ${result_array[i]['interface']}\n`;
+					line_vrf += ` ip vrf forwarding ${result_array[i]['name']}\n`;
+					line_vrf += ` ip address ${line_addr} ${line_mask[0]}.${line_mask[1]}.${line_mask[2]}.${line_mask[3]}\n`;
+					line_vrf += '!\n';
+					result += line_vrf;
+				}
+			}
+			result += '!\nend\n';
+			console.log(result);
+			console.log(result.split('\n').length, `${result.split('\n').length}em`);
+			
+			Array.from(document.querySelectorAll('textarea.cisco_config')).map((e)=>{
+				e.parentNode.parentNode.remove();
+			});
+			
+			let result_dom = [];
+			result_dom[0] = document.createElement('section');
+			result_dom[1] = document.createElement('div');
+			result_dom[2] = document.createElement('textarea');
+			result_dom[2].classList.add('cisco_config');
+			result_dom[2].style.height = `${result.split('\n').length}em`;
+			result_dom[2].spellcheck = false;
+			result_dom[2].value = result;
+			result_dom[1].appendChild(result_dom[2]);
+			result_dom[0].appendChild(result_dom[1]);
+			insertTo.after(result_dom[0]);
+		}
+	</script>
+	<script>
+		window.addEventListener('load',()=>{
+			sessionStorage.clear();
+		});
+	</script>
+</head><body>
+	<header>
+		<div></div>
+	</header>
+	<section>
+		<div>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>
+							<input type="button" onclick="preference_gen();" value="生成">
+						</th>
+						<td colspan="5">
+							<label>
+								<input type="checkbox" id="preference_flag_insertnull0" />
+								Insert Null0 default route to default-vrf
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th style="font-family: monospace;">+/-</th>
+						<th>VLAN番号<br />(VRF-RD番号)</th>
+						<th>端末名<br />(VRF識別名)</th>
+						<th>IPv4<br />アドレス</th>
+						<th>IPv4<br />ゲートウェイ</th>
+						<th>紐づけ<br />I/F番号</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="preference">
+						<th style="font-family: monospace;">
+							<input type="button" value="+" style="font-family: monospace;" onclick="preference_line(this);">/<input type="button" value="-" style="font-family: monospace;" onclick="preference_line(this, 'del');">
+						</th>
+						<td><input type="text" required data-vrf-id="number" pattern="^[1-9][0-9]{3}" maxlength="4" style="text-align:right;width:10em;font-family: monospace;" value="1001" /></td>
+						<td><input type="text" required data-vrf-id="name" pattern="([0-9a-zA-Z]|_|-)+" style="font-family: monospace;" value="Hosyu-PC1" /></td>
+						<td><input type="text" required data-vrf-id="addr" pattern="([0-9a-zA-Z]|\.|/)+" style="width: 130px;font-family: monospace;" value="192.168.10.2/29" /></td>
+						<td><input type="text" required data-vrf-id="gateway" pattern="([0-9a-zA-Z]|\.)+" style="width: 130px;font-family: monospace;" value="192.168.10.1" /></td>
+						<td>
+							<select data-vrf-id="interface" style="width: stretch;font-family: monospace;">
+								<option></option>
+								<option selected>Gi0/0</option>
+								<option>Gi0/1</option>
+							</select>
+						</td>
+					</tr>
+					<tr class="preference">
+						<th style="font-family: monospace;">
+							<input type="button" value="+" style="font-family: monospace;" onclick="preference_line(this);">/<input type="button" value="-" style="font-family: monospace;" onclick="preference_line(this, 'del');">
+						</th>
+						<td><input type="text" required data-vrf-id="number" pattern="^[1-9][0-9]{3}" maxlength="4" style="text-align:right;width:10em;font-family: monospace;" value="1002" /></td>
+						<td><input type="text" required data-vrf-id="name" pattern="([0-9a-zA-Z]|_|-)+" style="font-family: monospace;" value="Hosyu-PC2" /></td>
+						<td><input type="text" required data-vrf-id="addr" pattern="([0-9a-zA-Z]|\.|/)+" style="width: 130px;font-family: monospace;" value="192.168.10.10/29" /></td>
+						<td><input type="text" required data-vrf-id="gateway" pattern="([0-9a-zA-Z]|\.)+" style="width: 130px;font-family: monospace;" value="192.168.10.9" /></td>
+						<td>
+							<select data-vrf-id="interface" style="width: stretch;font-family: monospace;">
+								<option></option>
+								<option>Gi0/0</option>
+								<option>Gi0/1</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th style="font-family: monospace;">+/-</th>
+						<th>VLAN番号<br />(VRF-RD番号)</th>
+						<th>端末名<br />(VRF識別名)</th>
+						<th>IPv4<br />アドレス</th>
+						<th>IPv4<br />ゲートウェイ</th>
+						<th>紐づけ<br />I/F番号</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+	<section>
+		<div>
+			<textarea class="cisco_config" style="height: 20em;">使い方 / How to use
+1) 
++ ボタン押すことで列を増やせます（複製）。
+- ボタン押すことで列を減らせます（削除）。
+
+2)
+VLAN番号は 1000 から 4094 まで入力可能です。
+※1000未満の入力も可能ですが、入力するVLAN番号 と 端末VLAN番号 は揃えてください。
+　4095以上も入力可能ですが、CiscoISR側が対応していません。
+極力 入力するVLAN番号 と 端末VLAN番号 は揃えてください。
+ただし、重複する場合のみ変更してください。（重複チェックはしていません）
+
+3)
+VRF識別名（端末名）は日本語などのマルチバイト文字を使用しないでください。
+（CiscoISR側が対応していません）
+
+4)
+IPアドレスはIPv4形式のみ，「アドレス/サブネットマスク」の書式で記載してください。
+アドレスのみ記載した場合は、「/32（255.255.255.255）」が自動で付与されます。
+サブネットマスクは 32以下の整数 のみ受け付けます。（32超過の場合は32として処理されます）
+255.255.255.255 のような書式ではエラーになります。
+物理ポートにIPアドレスを設定する場合は、「紐づけI/F番号」を指定してください。
+
+5)
+ゲートウェイアドレスには「/32」のようなサブネットマスクの記載はしないでください。
+記載した場合そのまま出力されます。
+「Insert Null0 default route to default-vrf」にチェックをした場合は、デフォルトルータにルーティングループ防止の設定を追加します。
+
+6)
+「紐づけI/F番号」は同じポートを複数回指定可能です。
+ただし、CiscoISRに適用した場合は最後に記載されたものが使用されます。
+CiscoISRを複数台用意する場合に指定して、別途修正してください。
+
+7)
+すべての項目を入力したら「生成」押してください。
+CiscoISR用のコンフィグを出力します。
+
+RELEASE)
+1.0 (2025-07-17T11:15Z): 初版作成
+
+LICENSE)
+Copyright Y.Komiya and other contributors
+Released under the MIT license
+
+Date: 2025-07-17T11:15Z
+ JST: 2025-07-17T20:15+0900
+			</textarea>
+		</div>
+	</section>
+</body>
+</html>
