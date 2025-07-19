@@ -166,7 +166,7 @@ Date: 2025-07-17T11:15Z
 			result_dom[1] = document.createElement('div');
 			result_dom[2] = document.createElement('textarea');
 			result_dom[2].classList.add('cisco_config');
-			result_dom[2].style.height = `${result.split('\n').length}em`;
+			result_dom[2].style.height = `${result.split('\n').length+5}em`;
 			result_dom[2].spellcheck = false;
 			result_dom[2].value = result;
 			result_dom[1].appendChild(result_dom[2]);
