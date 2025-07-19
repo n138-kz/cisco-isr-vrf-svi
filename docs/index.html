@@ -51,11 +51,13 @@ Date: 2025-07-17T11:15Z
 			} else if(mode=="add") {
 				console.log(mode);
 				e1 = e0.parentNode.parentNode.cloneNode(true);
-				e1.children[1].children[0].value = '';
-				e1.children[2].children[0].value = '';
-				e1.children[3].children[0].value = '';
-				e1.children[4].children[0].value = '';
-				e1.children[5].children[0].value = '';
+				if(document.querySelector('#preference_flag_addline_policy').checked) {
+					e1.children[1].children[0].value = '';
+					e1.children[2].children[0].value = '';
+					e1.children[3].children[0].value = '';
+					e1.children[4].children[0].value = '';
+					e1.children[5].children[0].value = '';
+				}
 				e0.parentNode.parentNode.after(e1);
 			} else if(mode=="del") {
 				console.log(mode);
@@ -201,13 +203,21 @@ Date: 2025-07-17T11:15Z
 			<table border="1">
 				<thead>
 					<tr>
-						<th>
+						<th rowspan="2">
 							<input type="button" onclick="preference_gen();" value="生成">
 						</th>
 						<td colspan="5">
 							<label>
 								<input type="checkbox" id="preference_flag_insertnull0" />
 								Insert Null0 default route to default-vrf
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<label>
+								<input type="checkbox" id="preference_flag_addline_policy" checked />
+								Clear the value in add(new) line
 							</label>
 						</td>
 					</tr>
