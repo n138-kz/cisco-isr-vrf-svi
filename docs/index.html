@@ -96,6 +96,7 @@ Date: 2025-07-17T11:15Z
 				result_array.push(result_line);
 			});
 			console.log(result_array);
+			sessionStorage.setItem( (btoa(location.href)).slice(0, 16) + '.'+'preference', JSON.stringify(result_array) );
 			
 			for(let i=0;i<result_array.length;i++) {
 				line_vrf = '';
