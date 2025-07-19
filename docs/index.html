@@ -64,6 +64,7 @@ Date: 2025-07-17T11:15Z
 				e0.parentNode.parentNode.remove();
 			}
 
+			/* add footer *
 			console.log(document.querySelectorAll(`${e0.parentNode.parentNode.tagName}.${e0.parentNode.parentNode.classList[0]}`).length);
 			console.log(
 				`${e0.parentNode.parentNode.tagName}.${e0.parentNode.parentNode.classList[0]}`,
@@ -71,7 +72,6 @@ Date: 2025-07-17T11:15Z
 				document.querySelectorAll(`${e0.parentNode.parentNode.tagName}.${e0.parentNode.parentNode.classList[0]}`)[0].parentNode,
 			);
 			
-			/* add footer */
 			Array.from(document.querySelectorAll(`${e0.parentNode.parentNode.tagName}.${e0.parentNode.parentNode.classList[0]}`)[0].parentNode.children).map(e=>{
 				if(e.classList[0]=='preference_footer') {
 					e.remove();
@@ -83,6 +83,7 @@ Date: 2025-07-17T11:15Z
 				
 				e0.parentNode.parentNode.parentNode.appendChild(e1);
 			}
+			/* * */
 		}
 		function preference_gen() {
 			try{
