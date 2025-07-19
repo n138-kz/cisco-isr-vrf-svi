@@ -41,11 +41,11 @@ Date: 2025-07-17T11:15Z
 		function preference_line(e0=null,mode="add") {
 			console.log(e0.parentNode.parentNode);
 			console.log(mode, {add:mode=="add", del:mode=="del"})
-			if(false){
-			}else if(mode=="add"){
+			if(false) {
+			} else if(mode=="add") {
 				console.log(mode);
 				e0.parentNode.parentNode.after(e0.parentNode.parentNode.cloneNode(true));
-			}else if(mode=="del"){
+			} else if(mode=="del") {
 				console.log(mode);
 				e0.parentNode.parentNode.remove();
 			}
