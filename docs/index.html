@@ -207,6 +207,13 @@ Date: 2025-07-17T11:15Z
 					<tr>
 						<th rowspan="2">
 							<input type="button" onclick="preference_gen();" value="生成">
+							<datalist id="preference_list_interface">
+								<option></option>
+								<option>Gi0/0</option>
+								<option>Gi0/1</option>
+								<option>Fa0/0</option>
+								<option>Lo0</option>
+							</datalist>
 						</th>
 						<td colspan="5">
 							<label>
@@ -241,13 +248,7 @@ Date: 2025-07-17T11:15Z
 						<td><input type="text" required data-vrf-id="name" pattern="([0-9a-zA-Z]|_|-)+" style="font-family: monospace;" value="Hosyu-PC1" /></td>
 						<td><input type="text" required data-vrf-id="addr" pattern="([0-9a-zA-Z]|\.|/)+" style="width: 130px;font-family: monospace;" value="192.168.10.2/29" /></td>
 						<td><input type="text" required data-vrf-id="gateway" pattern="([0-9a-zA-Z]|\.)+" style="width: 130px;font-family: monospace;" value="192.168.10.1" /></td>
-						<td>
-							<select data-vrf-id="interface" style="width: stretch;font-family: monospace;">
-								<option></option>
-								<option selected>Gi0/0</option>
-								<option>Gi0/1</option>
-							</select>
-						</td>
+						<td><input type="text" data-vrf-id="interface" style="width: stretch;font-family: monospace;" value="lo0" list="preference_list_interface" /></td>
 					</tr>
 					<tr class="preference">
 						<th style="font-family: monospace;">
@@ -257,13 +258,7 @@ Date: 2025-07-17T11:15Z
 						<td><input type="text" required data-vrf-id="name" pattern="([0-9a-zA-Z]|_|-)+" style="font-family: monospace;" value="Hosyu-PC2" /></td>
 						<td><input type="text" required data-vrf-id="addr" pattern="([0-9a-zA-Z]|\.|/)+" style="width: 130px;font-family: monospace;" value="192.168.10.10/29" /></td>
 						<td><input type="text" required data-vrf-id="gateway" pattern="([0-9a-zA-Z]|\.)+" style="width: 130px;font-family: monospace;" value="192.168.10.9" /></td>
-						<td>
-							<select data-vrf-id="interface" style="width: stretch;font-family: monospace;">
-								<option></option>
-								<option>Gi0/0</option>
-								<option>Gi0/1</option>
-							</select>
-						</td>
+						<td><input type="text" data-vrf-id="interface" style="width: stretch;font-family: monospace;" value="" list="preference_list_interface" /></td>
 					</tr>
 				</tbody>
 			</table>
